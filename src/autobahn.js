@@ -8,56 +8,24 @@
 
 'use strict';
 
-var _ = require('lodash');
+var Route = require('./route');
+var SeriesRouteBuilder = require('./routeBuilder');
 
 var routes = {};
 
-var JunctionMixIn = function(_previousJunction) {
-    this.previous = _previousJunction;
-    this.previous.next = this;
-};
-
-var ToMixIn = function() {
-    var that = this;
-    that.to = function(destination) {
-         var junction = {};
-         JunctionMixIn.call(junction, that);
-         
-         return junction;
-    };
-};
-
-var LogMixIn = function() {
-    var junction = {};
-    JunctionMixIn.call(junction);
-    LogMixIn.call(junction);
-    ToMixIn.call(junction);
-    
-    junction.invoke = function(message) {
-        console.log(message);
-        junction.next.invoke(message);
-    };
-    
-    return junction;
-};
-
 function from(source) {
-    var junction = {};
-    JunctionMixIn.call(junction);
-    LogMixIn.call(junction);
-    ToMixIn.call(junction);
+    var route = new Route();
+    var routeBuilder = new SeriesRouteBuilder(route);
+    routes[source] = route;
     
-    routes[source] = junction;
-    junction.invoke = function(message) { this.next.invoke(message); };
-    
-    return junction;
+    return routeBuilder;
 }
 
 function send(route, message) {
     routes[route].invoke(message);
 }
 
-exports.awesome = {
+module.exports = {
     from: from,
     send: send
 };
