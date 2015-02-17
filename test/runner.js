@@ -5,7 +5,7 @@ var mocha = new Mocha();
 var passed = [];
 var failed = [];
 
-mocha.addFile('autobhan.test');
+mocha.addFile('autobahn.test');
 
 mocha.timeout(0);
 
