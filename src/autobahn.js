@@ -9,7 +9,7 @@
 'use strict';
 
 var Route = require('./route');
-var SeriesRouteBuilder = require('./routeBuilder');
+var SeriesRouteBuilder = require('./routeBuilder').SeriesRouteBuilder;
 
 var routes = {};
 

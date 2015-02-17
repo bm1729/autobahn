@@ -37,6 +37,7 @@
   },
   "keywords": [],
   "dependencies": {
+    "node-uuid": "^1.4.2",
     "winston": "^0.9.0"
   }
 }

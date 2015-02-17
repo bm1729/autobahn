@@ -9,19 +9,33 @@
 'use strict';
 
 var winston = require('winston');
+var Route = require('./route');
 
-function RouteBuilder(route) {
-    var that = this;
-    that.then = function(task) {
-        route.tasks.push(task);
-        return that;  
-    };
-    that.log = function() {
-        return that.then(function(message, onComplete) {
-            winston.info(message);
-            onComplete(message);
-        });
-    };
+function then(task) {
+    this.route.tasks.push(task);
+    return this;  
 }
 
-module.exports = RouteBuilder;
+function log() {
+    return then(function(message, onComplete) {
+        winston.info(message);
+        onComplete(message);
+    });
+}
+
+function SeriesRouteBuilder(_route) {
+    this.route = _route;
+}
+SeriesRouteBuilder.prototype.then = then;
+SeriesRouteBuilder.prototype.log = log;
+
+// function ParallelRouteBuilder(_parentBuilder, _onMerged) {
+//     this.parentBuilder = _parentBuilder;
+//     this.onMerged = _onMerged;
+// }
+// ParallelRouteBuilder.prototype.then = then;
+// ParallelRouteBuilder.prototype.log = log;
+
+module.exports = {
+    SeriesRouteBuilder: SeriesRouteBuilder
+};
