@@ -6,13 +6,12 @@ var target = require('../src/autobahn');
 describe('autobahn', function () {
     it('should work with a simple route', function (done) {
         target.from('source')
-            .then(function(message, onComplete) { 
-                message.body = message.body.toUpperCase();
-                onComplete(message); 
+            .then(function(message, onComplete) {
+                onComplete(message.toUpperCase()); 
                 
             })
             .then(function(message, onComplete) {
-                expect(message.body).to.equal('HELLO WORLD!');
+                expect(message).to.equal('HELLO WORLD!');
                 done();
             });
             
@@ -24,13 +23,14 @@ describe('autobahn', function () {
     //     var count = 0;
         
     //     target.from('source')
-    //         .split(function(message, onComplete) { return message.split(','); })
+    //         .split(function(message) { return message.split(','); })
     //             .then(function(message, onComplete) {
     //                 ++count;
     //                 if (count === 3) {
     //                     done();
     //                 }
-    //             });
+    //             })
+    //         .merge(function(parts) {});
             
     //     target.send('source', 'a,b,c');
     // });

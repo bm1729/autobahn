@@ -8,23 +8,20 @@
 
 'use strict';
 
-var Message = require('./message');
-
 function Route() {
     var that = this;
     
-    var onTaskComplete = function(message) {
+    var onComplete = function(message) {
         if (that.tasks.length > 0) {
             var task = that.tasks.shift();
-            task(message, onTaskComplete);     
+            task(message, onComplete);     
         }
     };
     
     that.tasks = [];
-    that.invoke = function(body) {
-        var message = new Message(body);
+    that.invoke = function(message) {
         var task = that.tasks.shift();
-        task(message, onTaskComplete);
+        task(message, onComplete);
     };
 }
 
