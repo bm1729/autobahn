@@ -5,16 +5,24 @@ Simple message routing
 ## Getting Started
 Install the module with: `npm install autobahn`
 
-```javascript
-var autobahn = require('autobahn');
-autobahn.awesome(); // "awesome"
-```
-
 ## Documentation
 _(Coming soon)_
 
 ## Examples
-_(Coming soon)_
+```javascript
+var autobahn = require('autobahn');
+
+// Build the route
+autobahn.from('source')
+    .then(function(payload, onComplete) { onComplete(payload.replace(/ /g, '')); })
+    .then(function(payload, onComplete) { onComplete(payload.toUpperCase()); });
+
+// Send stuff to the route
+autobahn.send('source', 'h e l l o !', function(result) {
+    expect(result).to.equal('HELLO!');
+    done();
+});
+```
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
