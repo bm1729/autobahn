@@ -53,6 +53,5 @@ describe('autobahn', function () {
             expect(result).to.equal('AACC');
             done();
         });
-        
     });
 });
