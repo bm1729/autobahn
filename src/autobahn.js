@@ -8,21 +8,21 @@
 
 'use strict';
 
-var Route = require('./route');
-var SeriesRouteBuilder = require('./routeBuilder').SeriesRouteBuilder;
+var Waypoint = require('./waypoint');
+var Message = require('./message');
+var SeriesRouteBuilder = require('./routeBuilder');
 
 var routes = {};
 
 function from(source) {
-    var route = new Route();
-    var routeBuilder = new SeriesRouteBuilder(route);
-    routes[source] = route;
-    
-    return routeBuilder;
+    var head = new Waypoint(null, function(payload, onCompleted) { onCompleted(payload); });
+    routes[source] = head;
+    return new SeriesRouteBuilder(head);
 }
 
-function send(route, message) {
-    routes[route].invoke(message);
+function send(route, payload, finished) {
+    var message = new Message(routes[route], payload, finished);
+    message.visit();
 }
 
 module.exports = {

@@ -8,11 +8,29 @@
 
 'use strict';
 
-var uuid = require('node-uuid');
+var _ = require('lodash');
 
-function Message(_body) {
-    this.body = _body;
-    this.uuid = uuid.v1();
+function Message(_currentTask, _payload, _finished) {
+    
+    var that = this;
+    
+    that.currentTask = _currentTask;
+    that.payload = _payload;
+    that.finished = _finished;
+    
+    that.visit = function() {
+        that.currentTask.accept(that.payload, function(newPayload) {
+            that.payload = newPayload;
+            that.currentTask = that.currentTask.next;
+            if (that.currentTask) {
+                that.visit();
+            } else {
+                if (_.isFunction(that.finished)) {
+                    that.finished(that.payload);
+                }
+            }
+        });
+    };
 }
 
 module.exports = Message;

@@ -5,33 +5,30 @@ var target = require('../src/autobahn');
  
 describe('autobahn', function () {
     it('should work with a simple route', function (done) {
+        
         target.from('source')
-            .then(function(message, onComplete) {
-                onComplete(message.toUpperCase()); 
-                
-            })
-            .then(function(message, onComplete) {
-                expect(message).to.equal('HELLO WORLD!');
-                done();
+            .then(function(payload, onComplete) {
+                onComplete(payload.toUpperCase());
             });
             
-        target.send('source', 'hello world!');
+        target.send('source', 'hello world!', function(payload) {
+            expect(payload).to.equal('HELLO WORLD!');
+            done();
+        });
     });
     
-    // it('should work with a split route', function (done) {
+    it('should work with a split route', function (done) {
         
-    //     var count = 0;
-        
-    //     target.from('source')
-    //         .split(function(message) { return message.split(','); })
-    //             .then(function(message, onComplete) {
-    //                 ++count;
-    //                 if (count === 3) {
-    //                     done();
-    //                 }
-    //             })
-    //         .merge(function(parts) {});
+        target.from('source')
+            .split(function(payload) { return payload.split(','); })
+                .then(function(payload, onComplete) {
+                    onComplete(payload.toUpperCase());
+                })
+            .merge(function(parts) { return parts.join(''); });
             
-    //     target.send('source', 'a,b,c');
-    // });
+        target.send('source', 'a,b,c', function(payload) {
+            expect(payload).to.equal('ABC');
+            done();
+        });
+    });
 });

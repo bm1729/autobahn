@@ -26,5 +26,3 @@ mocha.run(function(){
 }).on('pass', function(test){
     passed.push(test.title);
 });
-
-var a = 2;
