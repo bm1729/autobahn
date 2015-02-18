@@ -19,8 +19,7 @@ autobahn.from('source')
 
 // Send stuff to the route
 autobahn.send('source', 'h e l l o !', function(result) {
-    expect(result).to.equal('HELLO!');
-    done();
+    // result = 'HELLO!'
 });
 ```
 
