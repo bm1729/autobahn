@@ -61,7 +61,7 @@ __Arguments__
 
 <a name="forSend" />
 <a name="send" />
-### send(route, payload, finished)
+### send(route, payload, onFinished)
 
 Send a payload along a route.
 
