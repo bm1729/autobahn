@@ -69,7 +69,7 @@ __Arguments__
 
 * `route` - The name of the route.
 * `payload` - The payload to send.
-* `finished` - An optional callback invoked when the route is completed.
+* `onFinished` - An optional callback invoked when the route is completed.
 
 ## Examples
 ```javascript
