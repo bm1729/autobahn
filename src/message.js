@@ -10,19 +10,19 @@
 
 var _ = require('lodash');
 
-function Message(_currentTask, _payload, _onFinished) {
+function Message(_currentWaypoint, _payload, _onFinished) {
     
     var that = this;
     
-    that.currentTask = _currentTask;
+    that.currentWaypoint = _currentWaypoint;
     that.payload = _payload;
     that.onFinished = _onFinished;
     
     that.visit = function() {
-        that.currentTask.accept(that.payload, function(newPayload) {
+        that.currentWaypoint.accept(that.payload, function(newPayload) {
             that.payload = newPayload;
-            that.currentTask = that.currentTask.next;
-            if (that.currentTask) {
+            that.currentWaypoint = that.currentWaypoint.next;
+            if (that.currentWaypoint) {
                 that.visit();
             } else {
                 if (_.isFunction(that.onFinished)) {
