@@ -15,7 +15,7 @@ var SeriesRouteBuilder = require('./routeBuilder');
 var routes = {};
 
 function from(source) {
-    var head = new Waypoint(null, function(payload, onCompleted) { onCompleted(payload); });
+    var head = new Waypoint(null, function(payload, onCompleted) { onCompleted(null, payload); });
     routes[source] = head;
     return new SeriesRouteBuilder(head);
 }

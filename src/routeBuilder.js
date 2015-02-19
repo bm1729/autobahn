@@ -20,12 +20,12 @@ function then(task) {
 function log() {
     return this.then(function(payload, onComplete) {
         winston.info(payload);
-        onComplete(payload);
+        onComplete(null, payload);
     });
 }
 
 function split(splitter) {
-    var head = new Waypoint(null, function(payload, onCompleted) { onCompleted(payload); });
+    var head = new Waypoint(null, function(payload, onCompleted) { onCompleted(null, payload); });
     return new ParallelRouteBuilder(head, splitter, this);  
 }
 
@@ -40,14 +40,27 @@ function merge(merger) {
         
         // The results
         var results = [];
-        var completedTasks = 0;
-        var onSubTaskFinished = function(result) {
-            completedTasks++;
+        var errorReceived = false;
+        var onSubTaskFinished = function(error, result) {
+            
+            // If there is an error message then jump out early and report the error to the parent route
+            if (error !== undefined && error !== null) {
+                
+                // Only notify the parent once that an error has been received
+                if (!errorReceived) {
+                    errorReceived = true;
+                    onComplete(error, null);
+                }
+                
+                return;
+            }
+            
+            // Record the result 
             results.push(result);
             
             // If all the sub tasks have finished that continue on with the parent route passing on the result of the merge
-            if (completedTasks === parts.length) {
-                onComplete(merger(results));
+            if (results.length === parts.length) {
+                onComplete(null, merger(results));
             }
         };
         

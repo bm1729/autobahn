@@ -19,14 +19,25 @@ function Message(_currentWaypoint, _payload, _onFinished) {
     that.onFinished = _onFinished;
     
     that.visit = function() {
-        that.currentWaypoint.accept(that.payload, function(newPayload) {
+        that.currentWaypoint.accept(that.payload, function(error, newPayload) {
+            
+            // If the waypoint reports an error when processing the message then call onFinished prematurely
+            if (error !== undefined && error !== null && _.isFunction(that.onFinished)) {
+                that.onFinished(error, null);
+                return;
+            }
+            
+            // Update the payload
             that.payload = newPayload;
+            
+            // Visit the next waypoint if appropriate
             that.currentWaypoint = that.currentWaypoint.next;
             if (that.currentWaypoint) {
                 that.visit();
             } else {
+                // If there are no more waypoints to visit then call onFinished 
                 if (_.isFunction(that.onFinished)) {
-                    that.onFinished(that.payload);
+                    that.onFinished(null, that.payload);
                 }
             }
         });
