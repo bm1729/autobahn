@@ -21,9 +21,12 @@ function Message(_currentWaypoint, _payload, _onFinished) {
     that.visit = function() {
         that.currentWaypoint.accept(that.payload, function(error, newPayload) {
             
-            // If the waypoint reports an error when processing the message then call onFinished prematurely
-            if (error !== undefined && error !== null && _.isFunction(that.onFinished)) {
-                that.onFinished(error, null);
+            // If the waypoint reports an error when processing the message then end prematurely
+            if (error !== undefined && error !== null) {
+                //  Call onFinished if it has been defined
+                if (_.isFunction(that.onFinished)) {
+                    that.onFinished(error, null);
+                }
                 return;
             }
             
